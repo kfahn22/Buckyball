@@ -7,7 +7,7 @@ You can check out the code [here](https://editor.p5js.org/kfahn/full/KlWlmtOU9).
 <p align="center"><img src="assets/bucky.jpg" alt="Buckyball" width="800px"></p>
 
 
-<p align="center"><img src="assets/bucky1.jpg" alt="Buckyball" width="800px"></p>
+<p align="center"><img src="assets/sprites.jpg" alt="Buckyball" width="800px"></p>
 
 ## References
 
