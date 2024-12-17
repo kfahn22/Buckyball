@@ -2,7 +2,7 @@
 
 A buckyball (aka truncated icosahedron) is a shape with 60 vertices, 12 pentagonal, and 20 hexagonal faces. I adapted Daniel Shiffman's [code](https://editor.p5js.org/codingtrain/sketches/frIcGeI8l) for rendering a dodecahedron to render the buckyball. If you want to learn more about the buckyball and its relation to the golden ratio, I recommend checking out [The Golden Number](https://www.goldennumber.net/bucky-balls/).
 
-You can check out the code [here](https://editor.p5js.org/kfahn/full/KlWlmtOU9). I also have a version with sprites rendered on each face [here](https://editor.p5js.org/kfahn/sketches/wpMPtzq2y).
+You can check out the code [here](https://editor.p5js.org/kfahn/full/KlWlmtOU9). I also have a version with sprites rendered on each face [here](https://editor.p5js.org/kfahn/full/wpMPtzq2y).
 
 <p align="center"><img src="assets/bucky.jpg" alt="Buckyball" width="800px"></p>
 
