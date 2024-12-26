@@ -20,7 +20,7 @@ function hexToColor(hex) {
   let r = parseInt(hex.substring(0, 2), 16);
   let g = parseInt(hex.substring(2, 4), 16);
   let b = parseInt(hex.substring(4, 6), 16);
-  return color(r, g, b, 200);
+  return color(r, g, b, 230);
 }
 
 function generatePaletteArray(url) {
@@ -41,13 +41,14 @@ function setup() {
 function draw() {
   randomSeed(42);
   background(0);
+  //lights();
   ambientLight(color(255));
   translate(0, -20);
 
   rotateY(frameCount * 0.001); // Continuous rotation on the Y axis
   rotateX(-frameCount * 0.001); // Continuous rotation on the X axis
 
-  drawingContext.disable(drawingContext.DEPTH_TEST);
+  //drawingContext.disable(drawingContext.DEPTH_TEST);
   bucky.show();
 }
 

@@ -1,15 +1,16 @@
-// A Buckyball consists of 60 vertices forming 12 pentagonal and 20 hexagonal faces.
+// 
 
 // Adapted from the code from a dodecahedron from Coding Train
 // https://editor.p5js.org/codingtrain/sketches/frIcGeI8l
 
 // The spritesheet was generated using this sketch https://editor.p5js.org/kfahn/sketches/Mv6hd4wbo
 
-let bucky;
+let dodecahedron;
+
 let spritesheet;
 let textures = [];
 let palettes = [];
-let s = 64;
+let s = 128;
 
 let url =
   "https://supercolorpalette.com/?scp=G0-hsl-1FF8FF-2396FB-283CF6-6E2CF2-C131ED-E935C5-E43A78";
@@ -39,8 +40,10 @@ function preload() {
 
 function setup() {
   createCanvas(512, 512, WEBGL);
+  imageMode(CENTER);
 
-  palette = generatePaletteArray(url);
+  // Generate a color palette
+  palettes = generatePaletteArray(url);
 
   // Extract sprites from the spritesheet
   for (let y = 0; y < spritesheet.height; y += s) {
@@ -50,25 +53,21 @@ function setup() {
     }
   }
 
-  let faces = textures.slice(0, 32);
-  bucky = new Buckyball(30, palette, faces);
-  bucky.addVertices();
-  bucky.addFaces();
+  let faces = textures.slice(0, 12);
+  dodecahedron = new Dodecahedron(20, palettes, faces);
+  dodecahedron.addVertices();
+  dodecahedron.addFaces();
 }
 
 function draw() {
-  randomSeed(42);
   background(0);
   ambientLight(color(255));
   translate(0, -20);
 
-  rotateY(frameCount * 0.001); // Continuous rotation on the Y axis
-  rotateX(-frameCount * 0.001); // Continuous rotation on the X axis
+  rotateY(frameCount * 0.01); // Continuous rotation on the Y axis
+  rotateX(-frameCount * 0.01); // Continuous rotation on the X axis
 
+  // https://p5js.org/reference/p5/imageMode/
   drawingContext.disable(drawingContext.DEPTH_TEST);
-  bucky.show();
-}
-
-function mousePressed() {
-  save("bucky.jpg");
+  dodecahedron.show();
 }

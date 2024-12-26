@@ -118,7 +118,8 @@ class Buckyball {
     for (let i = 0; i < 12; i++) {
       // Fill for pentagon faces 
       //fill(255);
-      fill(this.palette[i % this.palette.length]);
+      //fill(this.palette[i % this.palette.length]);
+      fill(this.palette[3]);
       beginShape();
       for (let j = 0; j < this.faces[i].length; j++) {
         let v = this.vert[this.faces[i][j]];
@@ -128,7 +129,7 @@ class Buckyball {
     }
     for (let i = 12; i < this.faces.length; i++) {
       // Fill for hexagon faces 
-      fill(255, 200);
+      fill(255, 230);
       //fill(this.palette[i % this.palette.length]);
       beginShape();
       for (let j = 0; j < this.faces[i].length; j++) {

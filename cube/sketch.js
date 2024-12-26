@@ -1,8 +1,10 @@
 // https://editor.p5js.org/kfahn/sketches/Mv6hd4wbo
 
+let size = 150;
 let angle = 0;
 let spritesheet;
 let textures = [];
+let faces;
 let s = 64; // Sprite size (64x64)
 
 function preload() {
@@ -20,9 +22,11 @@ function setup() {
       textures.push(img);
     }
   }
+  faces = textures.slice(0, 6); // Use 6 textures (1 per face)
 }
 
 function draw() {
+  randomSeed(42);
   background(175);
 
   // Rotate the cube
@@ -30,21 +34,22 @@ function draw() {
   rotateY(angle * 0.3);
   rotateZ(angle * 1.2);
 
-  // Draw the cube with textures
-  drawTexturedCube();
+  textureMode(NORMAL);
+
+  // the same sprite is rendered on all faces
+  // texture(random(faces));
+  // box(size);
+
+  // Draw the cube with differnt sprites on each face
+  drawTexturedCube(faces);
 
   angle += 0.01;
 }
 
-// Function to draw a textured cube
-function drawTexturedCube() {
-  let size = 150; // Cube size
-  let faces = textures.slice(0, 6); // Use 6 textures (1 per face)
-  textureMode(NORMAL);
+function drawTexturedCube(faces) {
   // Front face
   push();
   texture(faces[0]);
-  //translate(0, 0, size / 2); // Move to center of front face
   translate(0, 0, size / 2); // Move to center of front face
   plane(size, size); // Draw a plane for the texture
   pop();
@@ -59,8 +64,6 @@ function drawTexturedCube() {
 
   // Right face
   push();
-  // Add light from the image.
-
   texture(faces[2]);
   translate(size / 2, 0, 0); // Move to center of right face
   rotateY(HALF_PI); // Rotate plane to align with the right face
@@ -90,4 +93,8 @@ function drawTexturedCube() {
   rotateX(HALF_PI); // Rotate plane to align with the bottom face
   plane(size, size);
   pop();
+}
+
+function mousePressed() {
+  save("cube.jpg");
 }
