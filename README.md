@@ -23,7 +23,7 @@ We will use the same code block for each of the faces of the cube. For the front
 
 <p align="center"><img src="assets/cube.jpg" alt="cube with sprites" width="800px"></p>
 
-Rendering sprites on each cube face is relatively straight forward because the uv coordinate system is rectangular and the angles and the planes intersect perpendicularly. Adding sprites to a dodecahedron is more complicated (and the buckyball is even more challenging.)
+Rendering sprites on each cube face is relatively straight forward because there is a limited number of faces and the planes intersect perpendicularly. Adding sprites to a dodecahedron is more complicated, and adding them to the buckyball is even more challenging!
 
 Let's start with the dodecahedron. We need to figure out the uv coordinates for each vertex.
 
@@ -31,7 +31,7 @@ Let's start with the dodecahedron. We need to figure out the uv coordinates for 
  vertex(v.x, v.y, v.z, uv.x, uv.y);
  ``` 
 
- We can do this by finding the minimum and maximum for the coordinate system for each face.
+ We can do this by finding the bounding box for each face. We can do this by finding the minium and maximum values for each face.
 
 ```JavaScript
 findBoundingBox(face) {
