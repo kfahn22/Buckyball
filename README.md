@@ -69,7 +69,7 @@ getUV(v, bounds) {
 
 We are able to see the sprites on most of the faces, but one some faces there are stripes instead of the sprites.
 
-<p align="center"><img src="assets/dodecahdron-stripes.jpg" alt="dodecahedron with sprites" width="800px"></p>
+<p align="center"><img src="assets/dodecahedron-stripes.jpg" alt="dodecahedron with sprites" width="800px"></p>
 
 I decided to try changing the coordinate system to (x, z) for these faces and this fixed the issue. You can find the sketch [here](https://editor.p5js.org/kfahn/full/TF2TfVCj1). I will add that a circular sprite would probablly work better as the angle of rotation of each sprite is not properly adjusted for the rotation of each pentagon.
 
@@ -86,14 +86,14 @@ I decided to try changing the coordinate system to (x, z) for these faces and th
         }
 ```
 
-<p align="center"><img src="assets/dodecahdron.jpg" alt="dodecahedron with sprites" width="800px"></p>
+<p align="center"><img src="assets/dodecahedron.jpg" alt="dodecahedron with sprites" width="800px"></p>
 
 ## Buckyball
 
 We can use the same procedure with the buckyball, although there is a comlication --
 the texture on some of the faces is skewed. I was able to fix several of the faces using ridiculously complex averages, but it doesn't work for all of the faces and is really not a good fix. There is also the issue of the sprites not be rotated properly.
 
-<p align="center"><img src="assets/textured.jpg" alt="buckyball with sprites" width="800px"></p>
+<p align="center"><img src="assets/textured-bucky.jpg" alt="Buckyball with sprites" width="800px"></p>
 
 ## References
 
