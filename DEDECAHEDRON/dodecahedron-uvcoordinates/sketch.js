@@ -7,7 +7,7 @@ let dodecahedron;
 
 let spritesheet;
 let textures = [];
-let palettes = [];
+let palette = [];
 let s = 64;
 
 let url =
@@ -40,9 +40,10 @@ function preload() {
 function setup() {
   createCanvas(512, 512, WEBGL);
   textureMode(NORMAL); // Enable UV coordinates
- stroke(random(palettes));
+
   // Generate a color palette
-  palettes = generatePaletteArray(url);
+  palette = generatePaletteArray(url);
+  // stroke(random(palette));
 
   // Extract sprites from the spritesheet
   for (let y = 0; y < spritesheet.height; y += s) {
@@ -53,7 +54,7 @@ function setup() {
   }
 
   let faces = textures.slice(0, 12);
-  dodecahedron = new Dodecahedron(100, palettes, faces);
+  dodecahedron = new Dodecahedron(100, palette, faces);
   dodecahedron.addVertices();
   dodecahedron.addFaces();
 }
