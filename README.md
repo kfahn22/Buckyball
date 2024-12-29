@@ -25,7 +25,7 @@ We will use the same code block for each of the faces of the cube. For the front
 
 Rendering sprites on each cube face is relatively straight forward because there is a limited number of faces and the planes intersect perpendicularly. Adding sprites to a dodecahedron is more complicated, and adding them to the buckyball is even more challenging!
 
-Let's start with the dodecahedron. It is not as practical to list of all of the faces. There are too and they intersect at different angles. We need a different approach -- we are going to calculate the uv coordinates for each vertex.
+Let's start with the dodecahedron. It is not as practical to list of all of the faces. There are too many and they intersect at different angles. We need a different approach -- we are going to calculate the uv coordinates for each vertex.
 
 ```Javascript
  vertex(v.x, v.y, v.z, uv.x, uv.y);
