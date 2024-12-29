@@ -97,16 +97,22 @@ the texture on some of the faces is skewed. I was able to fix several of the fac
 
 <p align="center"><img src="assets/textured-bucky.jpg" alt="Buckyball with sprites" width="800px"></p>
 
-## Next steps: using the unfolded buckyball to create a uv map
+## Net of the unfolded buckyball
 
-Another possible approach is to try to use the unfolded version of the buckyball to create a uv-mapping.
+I am not sure how practical this is, but perhaps another possible approach is to try to use the unfolded version of the buckyball to create a uv-mapping.
 
 <p align="center"><img src="assets/unwrapped.png" alt="Unwrapped buckyball" width="800px"></p>
 
 ## References
 
+- [BitangentVector](https://mathworld.wolfram.com/BitangentVector.html)
+- [Bitangent](https://en.wikipedia.org/wiki/Bitangent)
 - [Bucky-ball](https://www.goldennumber.net/bucky-balls/)
 - [Mathematics and the Buckyball](https://mathweb.ucsd.edu/~fan/amer.pdf)
+- [Compound_of_dodecahedron_and_icosahedron](https://en.wikipedia.org/wiki/Compound_of_dodecahedron_and_icosahedron)
+- [Icosidodecahedron](https://en.wikipedia.org/wiki/
+Icosidodecahedron#:~:text=An%20icosidodecahedron%20has%20icosahedral%20symmetry,of%20the%20edges%20of%20either.)
+- [IcosahedronStellations](https://mathworld.wolfram.com/IcosahedronStellations.html)
 - [Build a Buckyball Model](https://gems.education.purdue.edu/wp-content/uploads/2019/01/buckyballbuilding.pdf)
 - [The Bucky Ball](http://www.ece.northwestern.edu/local-apps/matlabhelp/techdoc/math_anal/sparse12.html)
 - [Graphs and Matrices](https://www.mathworks.com/help/matlab/math/graphs-and-matrices.html)
