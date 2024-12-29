@@ -23,46 +23,77 @@ We will use the same code block for each of the faces of the cube. For the front
 
 <p align="center"><img src="assets/cube.jpg" alt="cube with sprites" width="800px"></p>
 
-Rendering sprites on each cube face is fairly straight forward compared to adding sprites to each face of the buckyball, since each face is tilted in different direction and the faces are not square. We need to do a couple of calculations to figure out the proper sprite placement. I got some help from chatGPT to figure this part out. First, we need to determine the centroid of the quadrilateral (either pentagon or hexagon), which is the average position of the points. This is accomplished with the calculateCentroid() function:
+Rendering sprites on each cube face is relatively straight forward because the uv coordinate system is rectangular and the angles and the planes intersect perpendicularly. Adding sprites to a dodecahedron is more complicated (and the buckyball is even more challenging.)
+
+Let's start with the dodecahedron. We need to figure out the uv coordinates for each vertex.
+
+```Javascript
+ vertex(v.x, v.y, v.z, uv.x, uv.y);
+ ``` 
+
+ We can do this by finding the minimum and maximum for the coordinate system for each face.
 
 ```JavaScript
-calculateCentroid(face) {
-    let sum = createVector(0, 0, 0);
+findBoundingBox(face) {
+    let minX = Infinity,
+      maxX = -Infinity,
+      minY = Infinity,
+      maxY = -Infinity,
+      minZ = Infinity,
+      maxZ = -Infinity;
     for (let j = 0; j < face.length; j++) {
-      let v = this.vert[face[j]];
-      sum.add(v);
+      let vertex = this.vert[face[j]];
+      minX = min(minX, vertex.x);
+      maxX = max(maxX, vertex.x);
+      minY = min(minY, vertex.y);
+      maxY = max(maxY, vertex.y);
+      minZ = min(minZ, vertex.z);
+      maxZ = max(maxZ, vertex.z);
     }
-    return sum.div(face.length);
-}
-```
-
-Next, we need to figure out the angle of rotation. Imagine an arrow sticking out perpendicular from each face -- this is called the normal vector. We can use the normal to determine how to rotate the sprite. The `calculateNormal()` function takes three of the vertices from each face and calculates the normal.
-
-[myGeometry.computeNormals();](https://p5js.org/reference/p5.Geometry/vertexNormals/)
-
-```JavaScript
-calculateNormal(face) {
-    let v0 = this.vert[face[0]];
-    let v1 = this.vert[face[1]];
-    let v2 = this.vert[face[2]];
-    let edge1 = p5.Vector.sub(v1, v0);
-    let edge2 = p5.Vector.sub(v2, v0);
-    return edge1.cross(edge2).normalize();
+    return [minX, maxX, minY, maxY, minZ, maxZ];
   }
 ```
 
-In WEBGL mode, we can pass both the angle and a vector to rotate about (in our case called`axis`) to the rotate() function. The cross product `zAxis.cross(normal)` calculates a vector that is perpendicular to both the Z axis and the normal, with the magnitude of `axis` measuring the difference in direction between the two vectors.
+We then pass the vertex and bounding box to the `getUV()` function. 
 
 ```JavaScript
-let zAxis = createVector(0, 0, 1); // Starting direction
-let axis = zAxis.cross(normal); // Axis of rotation
-let angle = acos(zAxis.dot(normal)); // Angle between vectors
-if (axis.mag() > 0) rotate(angle, axis);
+getUV(v, bounds) {
+    let [minX, maxX, minY, maxY] = bounds;
+
+    let uCoord, vCoord;
+    uCoord = map(v.x, minX, maxX, 0, 1);
+    vCoord = map(v.y, minY, maxY, 0, 1);
+    return createVector(uCoord, vCoord);
+  }
 ```
 
-<p align="center"><img src="assets/sprites.jpg" alt="Buckyball" width="800px"></p>
+We are able to see the sprites on most of the faces, but one some faces there are stripes instead of the sprites.
 
-Now we can properly orient each sprite on all of the 32 faces of the buckyball. I am not sure how useful this is, but you can check out the buckyball with sprites rendered on each face [here](https://editor.p5js.org/kfahn/full/wpMPtzq2y).
+<p align="center"><img src="assets/dodecahdron-stripes.jpg" alt="dodecahedron with sprites" width="800px"></p>
+
+I decided to try changing the coordinate system to (x, z) for these faces and this fixed the issue. You can find the sketch [here](https://editor.p5js.org/kfahn/full/TF2TfVCj1). I will add that a circular sprite would probablly work better as the angle of rotation of each sprite is not properly adjusted for the rotation of each pentagon.
+
+```JavaScript
+ let xz = [2, 6, 7, 9, 11];
+        if (xz.includes(i)) {
+          let newV = createVector(v.x, v.z);
+          let bounds = [minX, maxX, minZ, maxZ];
+          uv = this.getUV(newV, bounds);
+        } else {
+          let newV = createVector(v.x, v.y);
+          let bounds = [minX, maxX, minY, maxY];
+          uv = this.getUV(newV, bounds);
+        }
+```
+
+<p align="center"><img src="assets/dodecahdron.jpg" alt="dodecahedron with sprites" width="800px"></p>
+
+## Buckyball
+
+We can use the same procedure with the buckyball, although there is a comlication --
+the texture on some of the faces is skewed. I was able to fix several of the faces using ridiculously complex averages, but it doesn't work for all of the faces and is really not a good fix. There is also the issue of the sprites not be rotated properly.
+
+<p align="center"><img src="assets/textured.jpg" alt="buckyball with sprites" width="800px"></p>
 
 ## References
 
@@ -75,3 +106,8 @@ Now we can properly orient each sprite on all of the 32 faces of the buckyball. 
 - [Graph 1389 - Truncated Icosahedral Graph](https://houseofgraphs.org/graphs/1389)
 - [Truncated_icosahedron](https://en.m.wikipedia.org/wiki/Truncated_icosahedron)
 -[3d-mapping-a-dodecahedron](https://forum.electromage.com/t/3d-mapping-a-dodecahedron/682/3)
+
+Texture
+
+[Calculating uv's](https://discourse.threejs.org/t/help-to-calculate-uvs-for-polygon/31109/4)
+[](https://stackoverflow.com/questions/15552521/how-to-determine-uv-texture-coordinates-for-n-sided-polygon)

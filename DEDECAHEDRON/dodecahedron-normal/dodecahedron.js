@@ -55,6 +55,29 @@ class Dodecahedron {
     this.faces.push([5, 19, 7, 11, 9]);
     this.faces.push([15, 7, 19, 18, 6]);
   }
+  getUV(v, face) {
+    let minX = Infinity,
+      minY = Infinity,
+      maxX = -Infinity,
+      maxY = -Infinity;
+
+    for (let j = 0; j < face.length; j++) {
+      let vertex = this.vert[face[j]];
+      minX = min(minX, vertex.x);
+      minY = min(minY, vertex.y);
+      maxX = max(maxX, vertex.x);
+      maxY = max(maxY, vertex.y);
+    }
+
+    let uCoord, vCoord;
+    let cx = (minX + maxX) / 2;
+    let cy = (minY + maxY) / 2;
+    let angle = atan2(v.y - cy, v.x - cx);
+
+    uCoord = 0.5 + 0.5 * cos(angle);
+    vCoord = 0.5 + 0.5 * sin(angle);
+    return createVector(uCoord, vCoord);
+  }
 
   show() {
     strokeWeight(2);
@@ -73,7 +96,7 @@ class Dodecahedron {
     // Helper functions from chatGPT to add sprites to buckyball faces
 
     //for (let i = 0; i < this.faces.length; i++) {
-       for (let i = 0; i < 12; i++) {
+    for (let i = 0; i < 12; i++) {
       let face = this.faces[i];
       let centroid = this.calculateCentroid(face);
       let normal = this.calculateNormal(face);
@@ -118,24 +141,24 @@ class Dodecahedron {
 
     // Rotate around the face's local Z-axis for consistent orientation
     // Note aligned properly yet!!
-    push()
-    if (i == 0 || i == 6)
-    {rotateZ(PI / 3);
+    push();
+    if (i == 0 || i == 6) {
+      rotateZ(PI / 3);
     } else if (i == 1 || i == 7) {
-      rotateZ(PI * 2 / 3)
+      rotateZ((PI * 2) / 3);
     } else if (i == 3 || i == 9) {
-      rotateZ(-PI * 1/3)
+      rotateZ((-PI * 1) / 3);
     } else if (i == 4 || 10) {
-      rotateZ(PI * 1/3);
-    // }  else if (i == 6) {
-    //   rotateZ(PI * 1/3)
+      rotateZ((PI * 1) / 3);
+      // }  else if (i == 6) {
+      //   rotateZ(PI * 1/3)
     }
 
     // Scale the sprite to match the face size
     let faceSize = 3.66 * this.r; // Adjust scaling as needed
     texture(sprite);
     plane(faceSize, faceSize);
-    pop()
+    pop();
     pop();
   }
 }
