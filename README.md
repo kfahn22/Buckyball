@@ -67,7 +67,7 @@ getUV(v, bounds) {
   }
 ```
 
-We are able to see the sprites on most of the faces, but one some faces there are stripes instead of the sprites.
+We are able to see the sprites on most of the faces, but on some faces there are stripes instead of the sprites.
 
 <p align="center"><img src="assets/dodecahedron-stripes.jpg" alt="dodecahedron with sprites" width="800px"></p>
 
@@ -90,10 +90,14 @@ I decided to try changing the coordinate system to (x, z) for these faces and th
 
 ## Buckyball
 
-We can use the same procedure with the buckyball, although there is a comlication --
-the texture on some of the faces is skewed. I was able to fix several of the faces using ridiculously complex averages, but it doesn't work for all of the faces and is really not a good fix. There is also the issue of the sprites not be rotated properly.
+We can use the same procedure with the buckyball, although there is a complication --
+the texture on some of the faces is skewed. I was able to fix several of the faces using ridiculously complex averages, but it doesn't work for all of the faces and is really not a good fix. There is also the issue of the sprites not be rotated properly, so this remains a work in progress.
 
 <p align="center"><img src="assets/textured-bucky.jpg" alt="Buckyball with sprites" width="800px"></p>
+
+Another possible approach is to try to use the unwrapped version of the buckyball. I might try that approach next.
+
+<p align="center"><img src="assets/unwrapped.jpg" alt="Unwrapped buckyball" width="800px"></p>
 
 ## References
 
