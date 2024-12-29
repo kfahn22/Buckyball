@@ -31,7 +31,7 @@ Let's start with the dodecahedron. We need to figure out the uv coordinates for 
  vertex(v.x, v.y, v.z, uv.x, uv.y);
  ``` 
 
- We can do this by finding the bounding box for each face. We can do this by finding the minium and maximum values for each face.
+ We can find the bounding box for each face by finding the minium and maximum values for each face.
 
 ```JavaScript
 findBoundingBox(face) {
