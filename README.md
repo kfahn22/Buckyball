@@ -97,7 +97,7 @@ the texture on some of the faces is skewed. I was able to fix several of the fac
 
 Another possible approach is to try to use the unwrapped version of the buckyball. I might try that approach next.
 
-<p align="center"><img src="assets/unwrapped.jpg" alt="Unwrapped buckyball" width="800px"></p>
+<p align="center"><img src="assets/unwrapped.png" alt="Unwrapped buckyball" width="800px"></p>
 
 ## References
 
