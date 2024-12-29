@@ -1,7 +1,8 @@
 class Buckyball {
-  constructor(r, images, font) {
+  constructor(r, palette, images, font) {
     this.r = r;
-    this.images = images; // array of index numbers
+    this.images = images;
+    this.palette = palette;
     this.font = font;
     this.vert = [];
     this.faces = [];
@@ -121,565 +122,133 @@ class Buckyball {
     return sum.div(face.length); // Average of face vertices
   }
 
-  getUV(v, face, type) {
+  // Find the bounding box for each pentagon
+  findBoundingBox(face) {
     let minX = Infinity,
-      minY = Infinity,
       maxX = -Infinity,
-      maxY = -Infinity;
-
-    for (let j = 0; j < face.length; j++) {
-      let vertex = this.vert[face[j]];
-      minX = min(minX, vertex.x);
-      minY = min(minY, vertex.y);
-      maxX = max(maxX, vertex.x);
-      maxY = max(maxY, vertex.y);
-    }
-
-    let uCoord, vCoord;
-
-    if (type === "pentagon") {
-      let cx = (minX + maxX) / 2;
-      let cy = (minY + maxY) / 2;
-      let angle = atan2(v.y - cy, v.x - cx);
-
-      uCoord = 0.5 + 0.5 * cos(angle);
-      vCoord = 0.5 + 0.5 * sin(angle);
-    } else {
-      // Default rectangle mapping for hexagons
-      // uCoord = map(v.x, minX, maxX, 0, 1);
-      // vCoord = map(v.y, minY, maxY, 0, 1);
-
-      let centroid = this.calculateCentroid(face);
-      let dx = v.x - centroid.x;
-      let dy = v.y - centroid.y;
-      let dz = v.z - centroid.z;
-      let d = sqrt(dx * dx + dy * dy + dz * dz);
-
-      uCoord = map(v.x / d, minX, maxX, 0, 1);
-      vCoord = map(v.y / d, minY, maxY, 0, 1);
-
-      // uCoord = constrain(dx / d, 0, 1);
-      // vCoord = constrain(dy / d, 0, 1);
-    }
-
-    return createVector(uCoord, vCoord);
-  }
-
-  getUV(v, face, type) {
-    let minX = Infinity,
       minY = Infinity,
-      maxX = -Infinity,
-      maxY = -Infinity;
-
-    for (let j = 0; j < face.length; j++) {
-      let vertex = this.vert[face[j]];
-      minX = min(minX, vertex.x);
-      minY = min(minY, vertex.y);
-      maxX = max(maxX, vertex.x);
-      maxY = max(maxY, vertex.y);
-    }
-
-    let uCoord, vCoord;
-
-    if (type === "pentagon") {
-      let cx = (minX + maxX) / 2;
-      let cy = (minY + maxY) / 2;
-      let angle = atan2(v.y - cy, v.x - cx);
-
-      uCoord = 0.5 + 0.5 * cos(angle);
-      vCoord = 0.5 + 0.5 * sin(angle);
-    } else {
-      // Default rectangle mapping for hexagons
-      uCoord = map(v.x, minX, maxX, 0, 1);
-      vCoord = map(v.y, minY, maxY, 0, 1);
-    }
-
-    return createVector(uCoord, vCoord);
-  }
-  getUV15(v, face, type) {
-    let minX = Infinity,
-      minY = Infinity,
-      maxX = -Infinity,
-      maxY = -Infinity;
-
-    for (let j = 0; j < face.length; j++) {
-      let vertex = this.vert[face[j]];
-      minX = min(minX, vertex.x);
-      minY = min(minY, vertex.y);
-      maxX = max(maxX, vertex.x);
-      maxY = max(maxY, vertex.y);
-    }
-
-    let uCoord, vCoord;
-
-    if (type === "pentagon") {
-      let cx = (minX + maxX) / 2;
-      let cy = (minY + maxY) / 2;
-      let angle = atan2(v.y - cy, v.x - cx);
-
-      uCoord = 0.5 + 0.5 * cos(angle);
-      vCoord = 0.5 + 0.5 * sin(angle);
-    } else {
-      // Default rectangle mapping for hexagons
-      vCoord = map(v.x, minX, maxX, 0, 1);
-      uCoord = map(v.y, minY, maxY, 0, 1);
-    }
-
-    return createVector(uCoord, vCoord);
-  }
-
-  // getUV_XZ(v, face, type) {
-  //   let minX = Infinity,
-  //     minZ = Infinity,
-  //     maxX = -Infinity,
-  //     maxZ = -Infinity;
-
-  //   for (let j = 0; j < face.length; j++) {
-  //     let vertex = this.vert[face[j]];
-  //     minX = min(minX, vertex.x);
-  //     minZ = min(minZ, vertex.z);
-  //     maxX = max(maxX, vertex.x);
-  //     maxZ = max(maxZ, vertex.z);
-  //   }
-
-  //   let uCoord, vCoord;
-
-  //   if (type === "pentagon") {
-  //     // Normalize to fit inside a circular UV mapping
-  //     let radius = dist(minX, minZ, maxX, maxZ) / 2;
-  //     let cx = (minX + maxX) / 2;
-  //     let cz = (minZ + maxZ) / 2;
-  //     let angle = atan2(v.z - cz, v.x - cx);
-
-  //     uCoord = 0.5 + 0.5 * cos(angle);
-  //     vCoord = 0.5 + 0.5 * sin(angle);
-  //   } else {
-  //     uCoord = map(v.x, minX, maxX, 0, 1);
-  //     vCoord = map(v.z, minZ, maxZ, 0, 1);
-  //   }
-
-  //   return createVector(uCoord, vCoord);
-  // }
-
-  getUV24(v, face, type) {
-    let minX = Infinity,
-      minY = Infinity,
-      minZ = Infinity,
-      maxX = -Infinity,
       maxY = -Infinity,
+      minZ = Infinity,
       maxZ = -Infinity;
-
     for (let j = 0; j < face.length; j++) {
       let vertex = this.vert[face[j]];
       minX = min(minX, vertex.x);
-      minY = min(minY, vertex.y);
-      minZ = min(minZ, vertex.z);
       maxX = max(maxX, vertex.x);
+      minY = min(minY, vertex.y);
       maxY = max(maxY, vertex.y);
+      minZ = min(minZ, vertex.z);
       maxZ = max(maxZ, vertex.z);
     }
+    return [minX, maxX, minY, maxY, minZ, maxZ];
+  }
 
-    let uCoord, vCoord;
+  avgBoundingBox(face) {
+    let [minX, maxX, minY, maxY, minZ, maxZ] = this.findBoundingBox(face);
     let minXY = (minX + minY) / 2;
     let maxXY = (maxX + maxY) / 2;
     let minXZ = (minX + minZ) / 2;
     let maxXZ = (maxX + maxZ) / 2;
     let minYZ = (minY + minZ) / 2;
     let maxYZ = (maxY + maxZ) / 2;
-    if (type === "pentagon") {
-      // Normalize to fit inside a circular UV mapping
-      let radius = dist(minX, minZ, maxX, maxZ) / 2;
-      let cx = (minX + maxX) / 2;
-      let cy = (minY + maxY) / 2;
-      let cxy = (cx + cy) / 2;
-      let cz = (minZ + maxZ) / 2;
-      let angle = atan2(v.z - cz, v.y - cy);
 
-      uCoord = 0.5 + 0.5 * cos(angle);
-      vCoord = 0.5 + 0.5 * sin(angle);
-    } else {
-      let vxy = (v.x + v.y) / 2;
-      let vxz = (v.x + v.z) / 2;
-      let vyz = (v.y + v.z) / 2;
-      uCoord = map(vyz, minYZ, maxYZ, 0, 1);
-      vCoord = map(v.x, minX, maxX, 0, 1);
-    }
-
-    return createVector(uCoord, vCoord);
+    return [minXY, maxXY, minXZ, maxXZ, minYZ, maxYZ];
   }
 
-  getUV25(v, face, type) {
-    let minX = Infinity,
-      minY = Infinity,
-      minZ = Infinity,
-      maxX = -Infinity,
-      maxY = -Infinity,
-      maxZ = -Infinity;
+  avergeVertex(v) {
+    let vxy = (v.x + v.y) / 2;
+    let vxz = (v.x + v.z) / 2;
+    let vyz = (v.y + v.z) / 2;
+    return createVector(vxy, vxz, vyz);
+  }
 
-    for (let j = 0; j < face.length; j++) {
-      let vertex = this.vert[face[j]];
-      minX = min(minX, vertex.x);
-      minY = min(minY, vertex.y);
-      minZ = min(minZ, vertex.z);
-      maxX = max(maxX, vertex.x);
-      maxY = max(maxY, vertex.y);
-      maxZ = max(maxZ, vertex.z);
-    }
+  // Use bounding box to find uv coordinates
+  getUV(v, bounds) {
+    let [minX, maxX, minY, maxY] = bounds;
 
     let uCoord, vCoord;
-    let minXY = (minX + minY) / 2;
-    let maxXY = (maxX + maxY) / 2;
-    let minXZ = (minX + minZ) / 2;
-    let maxXZ = (maxX + maxZ) / 2;
-    let minYZ = (minY + minZ) / 2;
-    let maxYZ = (maxY + maxZ) / 2;
-    if (type === "pentagon") {
-      // Normalize to fit inside a circular UV mapping
-      let radius = dist(minX, minZ, maxX, maxZ) / 2;
-      let cx = (minX + maxX) / 2;
-      let cy = (minY + maxY) / 2;
-      let cxy = (cx + cy) / 2;
-      let cz = (minZ + maxZ) / 2;
-      let angle = atan2(v.z - cz, v.y - cy);
-
-      uCoord = 0.5 + 0.5 * cos(angle);
-      vCoord = 0.5 + 0.5 * sin(angle);
-    } else {
-      let vxy = (v.x + v.y) / 2;
-      let vxz = (v.x + v.z) / 2;
-      let vyz = (v.y + v.z) / 2;
-      // uCoord = map(1 - vxy, minXY, maxXY, 0, 1);
-      // vCoord = map(v.z, minZ, maxZ, 0, 1);
-      uCoord = map(1 - vyz, minYZ, maxYZ, 0, 1); // 25
-      //  uCoord = map(1-vyz, minYZ, maxYZ, 0, 1); // 25
-      vCoord = map(v.x, minX, maxX, 0, 1);
-    }
-
+    uCoord = map(v.x, minX, maxX, 0, 1);
+    vCoord = map(v.y, minY, maxY, 0, 1);
     return createVector(uCoord, vCoord);
   }
-  getUV26(v, face, type) {
-    let minX = Infinity,
-      minY = Infinity,
-      minZ = Infinity,
-      maxX = -Infinity,
-      maxY = -Infinity,
-      maxZ = -Infinity;
-
-    for (let j = 0; j < face.length; j++) {
-      let vertex = this.vert[face[j]];
-      minX = min(minX, vertex.x);
-      minY = min(minY, vertex.y);
-      minZ = min(minZ, vertex.z);
-      maxX = max(maxX, vertex.x);
-      maxY = max(maxY, vertex.y);
-      maxZ = max(maxZ, vertex.z);
-    }
-
-    let uCoord, vCoord;
-
-    if (type === "pentagon") {
-      // Normalize to fit inside a circular UV mapping
-      let radius = dist(minX, minZ, maxX, maxZ) / 2;
-      let cx = (minX + maxX) / 2;
-      let cy = (minY + maxY) / 2;
-      let cxy = (cx + cy) / 2;
-      let cz = (minZ + maxZ) / 2;
-      let angle = atan2(v.z - cz, v.y - cy);
-
-      uCoord = 0.5 + 0.5 * cos(angle);
-      vCoord = 0.5 + 0.5 * sin(angle);
-    } else {
-      let minXY = (minX + minY) / 2;
-      let maxXY = (maxX + maxY) / 2;
-      let vxy = (v.x + v.y) / 2;
-      // uCoord = map(1 - vxy, minXY, maxXY, 0, 1); // 26
-      // vCoord = map(v.z, minZ, maxZ, 0, 1);
-      uCoord = map(v.z, minZ, maxZ, 0, 1);
-      vCoord = map(vxy, minXY, maxXY, 0, 1);
-    }
-
-    return createVector(uCoord, vCoord);
-  }
-
-  getUV27(v, face, type) {
-    let minX = Infinity,
-      minY = Infinity,
-      minZ = Infinity,
-      maxX = -Infinity,
-      maxY = -Infinity,
-      maxZ = -Infinity;
-
-    for (let j = 0; j < face.length; j++) {
-      let vertex = this.vert[face[j]];
-      minX = min(minX, vertex.x);
-      minY = min(minY, vertex.y);
-      minZ = min(minZ, vertex.z);
-      maxX = max(maxX, vertex.x);
-      maxY = max(maxY, vertex.y);
-      maxZ = max(maxZ, vertex.z);
-    }
-
-    let uCoord, vCoord;
-    let minXY = (minX + minY) / 2;
-    let maxXY = (maxX + maxY) / 2;
-    let minXZ = (minX + minZ) / 2;
-    let maxXZ = (maxX + maxZ) / 2;
-    let minYZ = (minY + minZ) / 2;
-    let maxYZ = (maxY + maxZ) / 2;
-    if (type === "pentagon") {
-      // Normalize to fit inside a circular UV mapping
-      let radius = dist(minX, minZ, maxX, maxZ) / 2;
-      let cx = (minX + maxX) / 2;
-      let cy = (minY + maxY) / 2;
-      let cxy = (cx + cy) / 2;
-      let cz = (minZ + maxZ) / 2;
-      let angle = atan2(v.z - cz, v.y - cy);
-
-      uCoord = 0.5 + 0.5 * cos(angle);
-      vCoord = 0.5 + 0.5 * sin(angle);
-    } else {
-      let vxy = (v.x + v.y) / 2;
-      let vxz = (v.x + v.z) / 2;
-      let vyz = (v.y + v.z) / 2;
-      // uCoord = map(1 - vxy, minXY, maxXY, 0, 1);
-      // vCoord = map(v.z, minZ, maxZ, 0, 1);
-      uCoord = map(vxz, minXZ, maxXZ, 0, 1);
-      vCoord = map(v.y, minY, maxY, 0, 1);
-    }
-
-    return createVector(uCoord, vCoord);
-  }
-  getUV28(v, face, type) {
-    let minX = Infinity,
-      minY = Infinity,
-      minZ = Infinity,
-      maxX = -Infinity,
-      maxY = -Infinity,
-      maxZ = -Infinity;
-
-    for (let j = 0; j < face.length; j++) {
-      let vertex = this.vert[face[j]];
-      minX = min(minX, vertex.x);
-      minY = min(minY, vertex.y);
-      minZ = min(minZ, vertex.z);
-      maxX = max(maxX, vertex.x);
-      maxY = max(maxY, vertex.y);
-      maxZ = max(maxZ, vertex.z);
-    }
-
-    let uCoord, vCoord;
-    let minXY = (minX + minY) / 2;
-    let maxXY = (maxX + maxY) / 2;
-    let minXZ = (minX + minZ) / 2;
-    let maxXZ = (maxX + maxZ) / 2;
-    let minYZ = (minY + minZ) / 2;
-    let maxYZ = (maxY + maxZ) / 2;
-    if (type === "pentagon") {
-      // Normalize to fit inside a circular UV mapping
-      let radius = dist(minX, minZ, maxX, maxZ) / 2;
-      let cx = (minX + maxX) / 2;
-      let cy = (minY + maxY) / 2;
-      let cxy = (cx + cy) / 2;
-      let cz = (minZ + maxZ) / 2;
-      let angle = atan2(v.z - cz, v.y - cy);
-
-      uCoord = 0.5 + 0.5 * cos(angle);
-      vCoord = 0.5 + 0.5 * sin(angle);
-    } else {
-      let vxy = (v.x + v.y) / 2;
-      let vxz = (v.x + v.z) / 2;
-      let vyz = (v.y + v.z) / 2;
-      // uCoord = map(v.xz, minXZ, maxXZ, 0, 1);
-      // vCoord = map(v.y, minY, maxY, 0, 1);
-      //  uCoord = map(v.y, minY, maxY, 0, 1);
-      //  vCoord = map(v.z, minZ, maxZ, 0, 1);
-      uCoord = map(vyz, minYZ, maxYZ, 0, 1);
-      vCoord = map(vxy, minXY, maxXY, 0, 1);
-      //vCoord = map(vxz, minXZ, maxXZ, 0, 1);
-    }
-
-    return createVector(uCoord, vCoord);
-  }
-  getUV29(v, face, type) {
-    let minX = Infinity,
-      minY = Infinity,
-      minZ = Infinity,
-      maxX = -Infinity,
-      maxY = -Infinity,
-      maxZ = -Infinity;
-
-    for (let j = 0; j < face.length; j++) {
-      let vertex = this.vert[face[j]];
-      minX = min(minX, vertex.x);
-      minY = min(minY, vertex.y);
-      minZ = min(minZ, vertex.z);
-      maxX = max(maxX, vertex.x);
-      maxY = max(maxY, vertex.y);
-      maxZ = max(maxZ, vertex.z);
-    }
-
-    let uCoord, vCoord;
-    let minXY = (minX + minY) / 2;
-    let maxXY = (maxX + maxY) / 2;
-    let minXZ = (minX + minZ) / 2;
-    let maxXZ = (maxX + maxZ) / 2;
-    let minYZ = (minY + minZ) / 2;
-    let maxYZ = (maxY + maxZ) / 2;
-    if (type === "pentagon") {
-      // Normalize to fit inside a circular UV mapping
-      let radius = dist(minX, minZ, maxX, maxZ) / 2;
-      let cx = (minX + maxX) / 2;
-      let cy = (minY + maxY) / 2;
-      let cxy = (cx + cy) / 2;
-      let cz = (minZ + maxZ) / 2;
-      let angle = atan2(v.z - cz, v.y - cy);
-
-      uCoord = 0.5 + 0.5 * cos(angle);
-      vCoord = 0.5 + 0.5 * sin(angle);
-    } else {
-      let vxy = (v.x + v.y) / 2;
-      let vxz = (v.x + v.z) / 2;
-      let vyz = (v.y + v.z) / 2;
-      //vCoord = map(v.xz, minXZ, maxXZ, 0, 1);
-      vCoord = map(v.y, minY, maxY, 0, 1);
-      //  uCoord = map(v.y, minY, maxY, 0, 1);
-     //vCoord = map(v.x, minX, maxX, 0, 1);
-     // vCoord = map(v.z, minZ, maxZ, 0, 1);
-      uCoord = map(vxy, minXY, maxXY, 0, 1);
-      //uCoord = map(vxz, minXZ, maxXZ, 0, 1);
-    }
-
-    return createVector(uCoord, vCoord);
-  }
-
-  // For faces 1, 6, 10, 11, 20-23
-  getUV_XZ(v, face, type) {
-    let minX = Infinity,
-      minZ = Infinity,
-      maxX = -Infinity,
-      maxZ = -Infinity;
-
-    for (let j = 0; j < face.length; j++) {
-      let vertex = this.vert[face[j]];
-      minX = min(minX, vertex.x);
-      minZ = min(minZ, vertex.z);
-      maxX = max(maxX, vertex.x);
-      maxZ = max(maxZ, vertex.z);
-    }
-
-    let uCoord, vCoord;
-
-    if (type === "pentagon") {
-      // Normalize to fit inside a circular UV mapping
-      let radius = dist(minX, minZ, maxX, maxZ) / 2;
-      let cx = (minX + maxX) / 2;
-      let cz = (minZ + maxZ) / 2;
-      let angle = atan2(v.z - cz, v.x - cx);
-
-      uCoord = 0.5 + 0.5 * cos(angle);
-      vCoord = 0.5 + 0.5 * sin(angle);
-    } else {
-      uCoord = map(v.x, minX, maxX, 0, 1);
-      vCoord = map(v.z, minZ, maxZ, 0, 1);
-    }
-
-    return createVector(uCoord, vCoord);
-  }
-
-  // getUV_YZ(v, face, type) {
-  //   let minX = Infinity,
-  //     minY = Infinity,
-  //     minZ = Infinity,
-  //     maxX = -Infinity,
-  //     maxY = -Infinity,
-  //     maxZ = -Infinity;
-
-  //   for (let j = 0; j < face.length; j++) {
-  //     let vertex = this.vert[face[j]];
-  //     minX = min(minX, vertex.x);
-  //     minY = min(minY, vertex.y);
-  //     minZ = min(minZ, vertex.z);
-  //     maxX = max(maxX, vertex.x);
-  //     maxY = max(maxY, vertex.y);
-  //     maxZ = max(maxZ, vertex.z);
-  //   }
-
-  //   let uCoord, vCoord;
-
-  //   if (type === "pentagon") {
-  //     // Normalize to fit inside a circular UV mapping
-  //     let radius = dist(minX, minZ, maxX, maxZ) / 2;
-  //     let cx = (minX + maxX) / 2;
-  //     let cy = (minY + maxY) / 2;
-  //     let cxy = (cx + cy) / 2;
-  //     let cz = (minZ + maxZ) / 2;
-  //     let angle = atan2(v.z - cz, v.y - cy);
-
-  //     uCoord = 0.5 + 0.5 * cos(angle);
-  //     vCoord = 0.5 + 0.5 * sin(angle);
-  //   } else {
-  //      let minXY = (minX + minY) / 2;
-  //      let maxXY = (maxX + maxY) / 2;
-  //      let vxy = (v.x + v.y) / 2
-  //     // uCoord = map(v.y, minY, maxY, 0, 1);
-  //       uCoord = map(vxy, minXY, maxXY, 0, 1);
-  //      vCoord = map(v.z, minZ, maxZ, 0, 1);
-  //     // uCoord = map(v.x, minX, maxX, 0, 1);
-  //     // vCoord = map(v.z, minZ, maxZ, 0, 1);
-  //   }
-
-  //   return createVector(uCoord, vCoord);
-  // }
 
   show() {
-    let centroid;
-    // 24, 25, 26, 27, 28, 29, 31
-    let yz = [26]; // skewed
+    let xz = [1, 6, 10, 11, 20, 21, 22, 23];
+    strokeWeight(2);
+    stroke(this.palette[0]);
     for (let i = 0; i < this.faces.length; i++) {
       // Apply the texture
       let sprite = this.images[i % this.images.length]; // Cycle through sprites
-      sprite.wrapS = REPEAT;
-      sprite.wrapT = REPEAT;
-
-      sprite.filter = LINEAR; // Smoother texture filtering
-      texture(sprite); // Apply texture
+      texture(sprite);
+      let uv;
 
       // Draw the face
       beginShape();
-
       for (let j = 0; j < this.faces[i].length; j++) {
-        centroid = this.calculateCentroid(this.faces[i]);
         let v = this.vert[this.faces[i][j]];
+        let [minX, maxX, minY, maxY, minZ, maxZ] = this.findBoundingBox(
+          this.faces[i]
+        );
+        let [minXY, maxXY, minXZ, maxXZ, minYZ, maxYZ] = this.avgBoundingBox(
+          this.faces[i]
+        );
 
-        // Determine UV mapping
-        let type = this.faces[i].length === 5 ? "pentagon" : "hexagon";
-        let uv;
-        let xz = [1, 6, 10, 11, 20, 21, 22, 23]; // display as lines
-
+        // Need to change the coordinate system to (x, z) for bounding box for these faces
         if (xz.includes(i)) {
-          uv = this.getUV_XZ(v, this.faces[i], type);
-          vertex(v.x, v.y, v.z, uv.x, uv.y);
-        } else if (i == 15) {
-          uv = this.getUV15(v, this.faces[i], type);
-        } else if (i == 24) {
-          uv = this.getUV24(v, this.faces[i], type);
-        } else if (i == 25) {
-          uv = this.getUV25(v, this.faces[i], type);
-        } else if (i == 26) {
-          uv = this.getUV26(v, this.faces[i], type);
-        } else if (i == 27) {
-          uv = this.getUV27(v, this.faces[i], type);
-          //  } else if (i == 29) {
-          // uv = this.getUV29(v, this.faces[i], type);
-          //   } else if (i == 28) {
-          // uv = this.getUV28(v, this.faces[i], type);
-        } else {
-          uv = this.getUV(v, this.faces[i], type);
-        }
+          let newV = createVector(v.x, v.z);
+          let bounds = [minX, maxX, minZ, maxZ];
+          uv = this.getUV(newV, bounds);
 
-        vertex(v.x, v.y, v.z, uv.x, uv.y); // Map vertex with UVs
+          // createVector(vxy, vxz, vyz)
+        } else if (i == 24) {
+          let avgV = this.avergeVertex(v);
+          let newV = createVector(avgV.z, v.x);
+          let bounds = [minYZ, maxYZ, minX, maxX];
+          uv = this.getUV(newV, bounds);
+        } else if (i == 25) {
+          let avgV = this.avergeVertex(v);
+          let newV = createVector(1 - avgV.z, v.x);
+          let bounds = [minYZ, maxYZ, minX, maxX];
+          uv = this.getUV(newV, bounds);
+        } else if (i == 26) {
+          let avgV = this.avergeVertex(v);
+          let newV = createVector(v.z, avgV.x);
+          let bounds = [minZ, maxZ, minXY, maxXY];
+          uv = this.getUV(newV, bounds);
+        } else if (i == 27) {
+          let avgV = this.avergeVertex(v);
+          let newV = createVector(avgV.y, v.y);
+          let bounds = [minXZ, maxXZ, minY, maxY];
+          uv = this.getUV(newV, bounds);
+          //let xz = [1, 6, 10, 11, 20, 21, 22, 23];
+          // } else if (i == 29) {
+          //   let avgV = this.avergeVertex(v);
+          //   let newV = createVector(v.y, v.x);
+          //   let bounds = [minY, maxY, minX, maxX];
+          //   uv = this.getUV(newV, bounds);
+        } else {
+          let newV = createVector(v.x, v.y);
+          let bounds = [minX, maxX, minY, maxY];
+          uv = this.getUV(newV, bounds);
+        }
+        vertex(v.x, v.y, v.z, uv.x, uv.y);
+
+        // this.displayFaceIndex(i, this.faces[i]);
       }
       endShape(CLOSE);
     }
+  }
+
+  displayFaceIndex(i, face) {
+    // Calculate and display face index
+    let centroid = this.calculateCentroid(face);
+    push();
+    translate(centroid.x + 30, centroid.y, centroid.z + 20);
+    fill(0);
+    stroke(0);
+    textSize(50);
+    textFont(this.font);
+    textAlign(CENTER, CENTER);
+    text(i, 0, 0, 0); // Display the face index
+    pop();
   }
 }

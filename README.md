@@ -4,7 +4,7 @@ A buckyball (aka truncated icosahedron) is a shape with 60 vertices, 12 pentagon
 
 <p align="center"><img src="assets/bucky.jpg" alt="Buckyball" width="800px"></p>
 
-The plain vanilla buckyball is pretty cool, but can we take it up a notch? It is not too hard to add color to the faces, creating a "soccer ball", albeit a flat one.
+The plain vanilla buckyball is pretty cool, but can we take it up a notch? It is not too hard to add color to the faces, creating a "soccer ball", albeit a flat one. You can check out the code [here](https://editor.p5js.org/kfahn/full/0mBhYA8TJ).
 
 <p align="center"><img src="assets/soccer.jpg" alt="Buckyball" width="800px"></p>
 
@@ -31,7 +31,9 @@ Let's start with the dodecahedron. It is not as practical to list of all of the 
  vertex(v.x, v.y, v.z, uv.x, uv.y);
 ```
 
-We can find the bounding box for each face by finding the minium and maximum values for each face. I believe this is the same approach used by the p5.Geometry.calculateBoundingBox() function in [p5.js](https://p5js.org/reference/p5.Geometry/calculateBoundingBox/). (I tried using the built-in p5.Geometry functions to render the dodecahedron and buckyball, but had no luck. Specifically, the getFaces() function did not generate the faces properly.)
+We can find the bounding box for each face by finding the minium and maximum values for each face. I believe this is the same approach used by the p5.Geometry.calculateBoundingBox() function in [p5.js](https://p5js.org/reference/p5.Geometry/calculateBoundingBox/).
+
+ As a side note, I tried using the built-in p5.Geometry functions to render the dodecahedron and buckyball, but had no luck. Specifically, the getFaces() function did not generate the faces properly.
 
 ```JavaScript
 findBoundingBox(face) {
@@ -91,11 +93,13 @@ I decided to try changing the coordinate system to (x, z) for these faces and th
 ## Buckyball
 
 We can use the same procedure with the buckyball, although there is a complication --
-the texture on some of the faces is skewed. I was able to fix several of the faces using ridiculously complex averages, but it doesn't work for all of the faces and is really not a good fix. There is also the issue of the sprites not be rotated properly, so this remains a work in progress.
+the texture on some of the faces is skewed. I was able to fix several of the faces using ridiculously complex averages, but it doesn't work for all of the faces and is really not a good fix. There is also the issue of the sprites not being rotated properly, so this remains a work in progress. If you would like to check out the sketch, you can find it [here](https://editor.p5js.org/kfahn/sketches/nJ_OdFnxA).
 
 <p align="center"><img src="assets/textured-bucky.jpg" alt="Buckyball with sprites" width="800px"></p>
 
-Another possible approach is to try to use the unwrapped version of the buckyball. I might try that approach next.
+## Next steps: using the unfolded buckyball to create a uv map
+
+Another possible approach is to try to use the unfolded version of the buckyball to create a uv-mapping.
 
 <p align="center"><img src="assets/unwrapped.png" alt="Unwrapped buckyball" width="800px"></p>
 
