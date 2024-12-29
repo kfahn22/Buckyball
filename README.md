@@ -19,7 +19,7 @@ plane(size, size); // Draw a plane for the texture
 pop();
 ```
 
-We will use the same code block for each of the faces of the cube. For the front face, no rotation is necessary so `angle = 0`. For the back face of the cube, we need to rotate around the Y axis by `angle = PI`, for the right face we rotate around the Y axis by `angle = PI/2`, etc.
+We will use the same code block for each of the faces of the cube. For the front face, no rotation is necessary so `angle = 0`. For the back face of the cube, we need to rotate around the Y axis by `angle = PI`, for the right face we rotate around the Y axis by `angle = PI/2`, etc. You can learn more about adding textures by watching Daniel Shiffman's [WebGl track](https://thecodingtrain.com/tracks/webgl/webgl/6-createGraphics).
 
 <p align="center"><img src="assets/cube.jpg" alt="cube with sprites" width="800px"></p>
 
