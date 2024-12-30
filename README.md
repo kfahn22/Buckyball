@@ -87,9 +87,7 @@ We can use the same procedure with the buckyball. I had to trouble-shoot a bit b
 - [Bucky-ball](https://www.goldennumber.net/bucky-balls/)
 - [Mathematics and the Buckyball](https://mathweb.ucsd.edu/~fan/amer.pdf)
 - [Compound_of_dodecahedron_and_icosahedron](https://en.wikipedia.org/wiki/Compound_of_dodecahedron_and_icosahedron)
-- [Icosidodecahedron](https://en.wikipedia.org/wiki/
-Icosidodecahedron#:~:text=An%20icosidodecahedron%20has%20icosahedral%20symmetry,of%20the%20edges%20of%20either.)  
-- [IcosahedronStellations](https://mathworld.wolfram.com/IcosahedronStellations.html)  
+
 - [Build a Buckyball Model](https://gems.education.purdue.edu/wp-content/uploads/2019/01/buckyballbuilding.pdf)
 - [The Bucky Ball](http://www.ece.northwestern.edu/local-apps/matlabhelp/techdoc/math_anal/sparse12.html)
 - [Graphs and Matrices](https://www.mathworks.com/help/matlab/math/graphs-and-matrices.html)
