@@ -95,8 +95,3 @@ We can use the same procedure with the buckyball. I had to trouble-shoot a bit b
 - [Graph 1389 - Truncated Icosahedral Graph](https://houseofgraphs.org/graphs/1389)
 - [polyhedr.com](https://polyhedr.com/icosidodecahedron2.html)
 - [Truncated_icosahedron](https://en.m.wikipedia.org/wiki/Truncated_icosahedron) -[3d-mapping-a-dodecahedron](https://forum.electromage.com/t/3d-mapping-a-dodecahedron/682/3)
-
-Texture
-
-[Calculating uv's](https://discourse.threejs.org/t/help-to-calculate-uvs-for-polygon/31109/4)
-[](https://stackoverflow.com/questions/15552521/how-to-determine-uv-texture-coordinates-for-n-sided-polygon)
