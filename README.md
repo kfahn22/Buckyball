@@ -25,7 +25,7 @@ We will use the same code block for each of the faces of the cube. For the front
 
 Rendering sprites on each cube face is relatively straight forward because there is a limited number of faces and the planes intersect perpendicularly. Adding sprites to a dodecahedron is more complicated, and adding them to the buckyball is even more challenging!
 
-Let's start with the dodecahedron. It is not as practical to list of all of the faces. There are too many and they intersect at different angles. We need a different approach -- we are going to calculate the uv coordinates for each vertex.
+Let's start with the dodecahedron. It is not as practical to list of the tranlation and rotation for all of the faces. There are too many and they intersect at different angles. We need a different approach -- we are going to calculate the uv coordinates for each vertex.
 
 ```Javascript
  vertex(v.x, v.y, v.z, uv.x, uv.y);
@@ -55,7 +55,8 @@ getUV(face) {
     let uCoord, vCoord;
     for (let j = 0; j < face.length; j++) {
       let v = this.vert[face[j]];
-      let relative = p5.Vector.sub(v, centroid); // Local coordinates
+      // Find the locale coordinates
+      let relative = p5.Vector.sub(v, centroid); 
 
       // Project to 2D plane
       uCoord = 0.5 + (0.5 * p5.Vector.dot(relative, tangent)) / scale; // Normalize to [0, 1]
@@ -87,8 +88,8 @@ We can use the same procedure with the buckyball. I had to trouble-shoot a bit b
 - [Mathematics and the Buckyball](https://mathweb.ucsd.edu/~fan/amer.pdf)
 - [Compound_of_dodecahedron_and_icosahedron](https://en.wikipedia.org/wiki/Compound_of_dodecahedron_and_icosahedron)
 - [Icosidodecahedron](https://en.wikipedia.org/wiki/
-Icosidodecahedron#:~:text=An%20icosidodecahedron%20has%20icosahedral%20symmetry,of%20the%20edges%20of%20either.)
-- [IcosahedronStellations](https://mathworld.wolfram.com/IcosahedronStellations.html)
+Icosidodecahedron#:~:text=An%20icosidodecahedron%20has%20icosahedral%20symmetry,of%20the%20edges%20of%20either.)  
+- [IcosahedronStellations](https://mathworld.wolfram.com/IcosahedronStellations.html)  
 - [Build a Buckyball Model](https://gems.education.purdue.edu/wp-content/uploads/2019/01/buckyballbuilding.pdf)
 - [The Bucky Ball](http://www.ece.northwestern.edu/local-apps/matlabhelp/techdoc/math_anal/sparse12.html)
 - [Graphs and Matrices](https://www.mathworks.com/help/matlab/math/graphs-and-matrices.html)
