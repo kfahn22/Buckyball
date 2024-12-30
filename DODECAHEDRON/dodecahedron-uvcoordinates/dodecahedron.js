@@ -7,6 +7,7 @@ class Dodecahedron {
     this.r = r;
     this.vert = [];
     this.faces = [];
+    this.uvCoords = [];
   }
 
   addVertices() {
@@ -40,6 +41,16 @@ class Dodecahedron {
     this.vert.forEach((v) => v.mult(this.r));
   }
 
+  // Calculate the centroid of a face
+  calculateCentroid(face) {
+    let sum = createVector(0, 0, 0);
+    for (let j = 0; j < face.length; j++) {
+      let v = this.vert[face[j]];
+      sum.add(v);
+    }
+    return sum.div(face.length); // Average of face vertices
+  }
+
   addFaces() {
     // Define the faces using the vertex indices
     this.faces.push([0, 16, 2, 10, 8]);
@@ -56,70 +67,56 @@ class Dodecahedron {
     this.faces.push([15, 7, 19, 18, 6]);
   }
 
-  // Find the bounding box for each pentagon
-  findBoundingBox(face) {
-    let minX = Infinity,
-      maxX = -Infinity,
-      minY = Infinity,
-      maxY = -Infinity,
-      minZ = Infinity,
-      maxZ = -Infinity;
-    for (let j = 0; j < face.length; j++) {
-      let vertex = this.vert[face[j]];
-      minX = min(minX, vertex.x);
-      maxX = max(maxX, vertex.x);
-      minY = min(minY, vertex.y);
-      maxY = max(maxY, vertex.y);
-      minZ = min(minZ, vertex.z);
-      maxZ = max(maxZ, vertex.z);
-    }
-    return [minX, maxX, minY, maxY, minZ, maxZ];
+  computeBasisVectors(face) {
+    let v0 = this.vert[face[0]];
+    let v1 = this.vert[face[1]];
+    let tangent = p5.Vector.sub(v1, v0).normalize(); // X-axis
+    let normal = p5.Vector.cross(
+      tangent,
+      p5.Vector.sub(this.vert[face[2]], v0)
+    ).normalize();
+    let bitangent = p5.Vector.cross(normal, tangent).normalize(); // Y-axis
+    return [tangent, bitangent];
   }
 
-  // Use bounding box to find uv coordinates
-  getUV(v, bounds) {
-    let [minX, maxX, minY, maxY] = bounds;
-
+  getUV(face) {
+    // UV Mapping: Project vertices onto the tangent-bitangent plane
+    let centroid = this.calculateCentroid(face);
+    let [tangent, bitangent] = this.computeBasisVectors(face);
+    let scale = this.r; // Scale UVs based on radius for consistency
     let uCoord, vCoord;
-    uCoord = map(v.x, minX, maxX, 0, 1);
-    vCoord = map(v.y, minY, maxY, 0, 1);
-    return createVector(uCoord, vCoord);
+    for (let j = 0; j < face.length; j++) {
+      let v = this.vert[face[j]];
+      let relative = p5.Vector.sub(v, centroid); // Local coordinates
+
+      // Project to 2D plane
+      uCoord = 0.5 + (0.5 * p5.Vector.dot(relative, tangent)) / scale; // Normalize to [0, 1]
+      vCoord = 0.5 + (0.5 * p5.Vector.dot(relative, bitangent)) / scale;
+      this.uvCoords.push(createVector(1 - uCoord, 1 - vCoord));
+    }
   }
 
+  // I got some help from chatGPT for this function
   show() {
-    let xz = [2, 6, 7, 9, 11];
-    stroke(this.palette[0]);
+    stroke(this.palette[4]);
     strokeWeight(2);
+
     for (let i = 0; i < this.faces.length; i++) {
+      let face = this.faces[i];
+
       // Apply the texture
-      let sprite = this.images[i % this.images.length]; // Cycle through sprites
+      let sprite = this.images[i % this.images.length];
       texture(sprite);
-      let uv;
 
-      // Draw the face
+      // Get uv coordinates
+      this.getUV(face);
+
+      // Draw the face with proper UVs
       beginShape();
-      for (let j = 0; j < this.faces[i].length; j++) {
-        let v = this.vert[this.faces[i][j]];
-        let [minX, maxX, minY, maxY, minZ, maxZ] = this.findBoundingBox(
-          this.faces[i]
-        );
-
-        // Need to change the coordinate system to (x, z) for bounding box for these faces
-        if (xz.includes(i)) {
-          let newV = createVector(v.x, v.z);
-          let bounds = [minX, maxX, minZ, maxZ];
-          uv = this.getUV(newV, bounds);
-        } else {
-          let newV = createVector(v.x, v.y);
-          let bounds = [minX, maxX, minY, maxY];
-          uv = this.getUV(newV, bounds);
-        }
-
-        // let newV = createVector(v.x, v.y);
-        // let bounds = [minX, maxX, minY, maxY];
-        // uv = this.getUV(newV, bounds);
-
-        vertex(v.x, v.y, v.z, uv.x, uv.y); // Map vertex with UVs
+      for (let j = 0; j < face.length; j++) {
+        let v = this.vert[face[j]];
+        let uv = this.uvCoords[j];
+        vertex(v.x, v.y, v.z, uv.x, uv.y);
       }
       endShape(CLOSE);
     }

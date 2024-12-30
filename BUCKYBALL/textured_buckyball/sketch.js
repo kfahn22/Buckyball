@@ -2,7 +2,7 @@ let buckyball;
 //let img; // Texture image
 let spritesheet;
 s = 64; //for spritesheet1.png
-// s = 128 //for numbers.png
+//s = 128 //for numbers.png
 
 let textures = [];
 let palette = [];
@@ -11,6 +11,8 @@ let font;
 // For trouble-shooting -- trying to figure out why some images are skewed
 // numbers.png
 // https://editor.p5js.org/kfahn/sketches/M3k5BJI29
+
+// Sprites from https://editor.p5js.org/kfahn/sketches/7LcbjlbSV
 
 let url =
   "https://supercolorpalette.com/?scp=G0-hsl-1FF8FF-2396FB-283CF6-6E2CF2-C131ED-E935C5-E43A78";
@@ -35,7 +37,8 @@ function generatePaletteArray(url) {
 }
 
 function preload() {
-  spritesheet = loadImage("spritesheet1.png");
+  
+  spritesheet = loadImage("spritesheet.png");
   //spritesheet = loadImage("numbers.png");
   font = loadFont("Cubano.ttf");
 }
@@ -60,13 +63,14 @@ function setup() {
 }
 
 function draw() {
-  background(200);
+  background(59);
   textureMode(NORMAL); // Enable UV coordinates
-  //orbitControl(); // Allows mouse rotation
-  rotateX(frameCount * 0.01); // Slow rotation
-  rotateY(frameCount * 0.01); // Slow rotation
+ orbitControl(); // Allows mouse rotation
+  // rotateX(frameCount * 0.01); // Slow rotation
+  // rotateY(frameCount * 0.01); // Slow rotation
 
   buckyball.show();
+  //buckyball.showVert();
 }
 
 // function mousePressed() {

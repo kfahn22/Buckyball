@@ -31,75 +31,51 @@ Let's start with the dodecahedron. It is not as practical to list of all of the 
  vertex(v.x, v.y, v.z, uv.x, uv.y);
 ```
 
-We can find the bounding box for each face by finding the minium and maximum values for each face. I believe this is the same approach used by the p5.Geometry.calculateBoundingBox() function in [p5.js](https://p5js.org/reference/p5.Geometry/calculateBoundingBox/).
-
- As a side note, I tried using the built-in p5.Geometry functions to render the dodecahedron and buckyball, but had no luck. Specifically, the getFaces() function did not generate the faces properly.
+First, we need to find the basis vectors for each face. Then, with the basis vectors in hand, we can compute the uv's for each face.
 
 ```JavaScript
-findBoundingBox(face) {
-    let minX = Infinity,
-      maxX = -Infinity,
-      minY = Infinity,
-      maxY = -Infinity,
-      minZ = Infinity,
-      maxZ = -Infinity;
-    for (let j = 0; j < face.length; j++) {
-      let vertex = this.vert[face[j]];
-      minX = min(minX, vertex.x);
-      maxX = max(maxX, vertex.x);
-      minY = min(minY, vertex.y);
-      maxY = max(maxY, vertex.y);
-      minZ = min(minZ, vertex.z);
-      maxZ = max(maxZ, vertex.z);
-    }
-    return [minX, maxX, minY, maxY, minZ, maxZ];
-  }
+computeBasisVectors(face) {
+    let v0 = this.vert[face[0]];
+    let v1 = this.vert[face[1]];
+    let tangent = p5.Vector.sub(v1, v0).normalize(); // X-axis
+    let normal = p5.Vector.cross(
+      tangent,
+      p5.Vector.sub(this.vert[face[2]], v0)
+    ).normalize();
+    let bitangent = p5.Vector.cross(normal, tangent).normalize(); // Y-axis
+    return [tangent, bitangent];
+}
 ```
 
-We then pass the vertex and bounding box to the `getUV()` function.
-
-```JavaScript
-getUV(v, bounds) {
-    let [minX, maxX, minY, maxY] = bounds;
-
+```Javascript
+getUV(face) {
+    let centroid = this.calculateCentroid(face);
+    let [tangent, bitangent] = this.computeBasisVectors(face);
+    let scale = this.r; 
     let uCoord, vCoord;
-    uCoord = map(v.x, minX, maxX, 0, 1);
-    vCoord = map(v.y, minY, maxY, 0, 1);
-    return createVector(uCoord, vCoord);
+    for (let j = 0; j < face.length; j++) {
+      let v = this.vert[face[j]];
+      let relative = p5.Vector.sub(v, centroid); // Local coordinates
+
+      // Project to 2D plane
+      uCoord = 0.5 + (0.5 * p5.Vector.dot(relative, tangent)) / scale; // Normalize to [0, 1]
+      vCoord = 0.5 + (0.5 * p5.Vector.dot(relative, bitangent)) / scale;
+      this.uvCoords.push(createVector(1 - uCoord, 1 - vCoord));
+    }
   }
 ```
 
-We are able to see the sprites on most of the faces, but on some faces there are stripes instead of the sprites.
-
-<p align="center"><img src="assets/dodecahedron-stripes.jpg" alt="dodecahedron with sprites" width="800px"></p>
-
-I decided to try changing the coordinate system to (x, z) for these faces and this fixed the issue. You can find the sketch [here](https://editor.p5js.org/kfahn/full/TF2TfVCj1). I will add that a circular sprite would probablly work better as the angle of rotation of each sprite is not properly adjusted for the rotation of each pentagon.
-
-```JavaScript
- let xz = [2, 6, 7, 9, 11];
-        if (xz.includes(i)) {
-          let newV = createVector(v.x, v.z);
-          let bounds = [minX, maxX, minZ, maxZ];
-          uv = this.getUV(newV, bounds);
-        } else {
-          let newV = createVector(v.x, v.y);
-          let bounds = [minX, maxX, minY, maxY];
-          uv = this.getUV(newV, bounds);
-        }
-```
+ You can find the sketch [here](https://editor.p5js.org/kfahn/full/TF2TfVCj1).
 
 <p align="center"><img src="assets/dodecahedron.jpg" alt="dodecahedron with sprites" width="800px"></p>
 
 ## Buckyball
 
-We can use the same procedure with the buckyball, although there is a complication --
-the texture on some of the faces is skewed. I was able to fix several of the faces using ridiculously complex averages, but it doesn't work for all of the faces and is really not a good fix. There is also the issue of the sprites not being rotated properly, so this remains a work in progress. If you would like to check out the sketch, you can find it [here](https://editor.p5js.org/kfahn/sketches/nJ_OdFnxA).
+We can use the same procedure with the buckyball. I had to trouble-shoot a bit because initially the texture on some of the faces was reversed or warped. I was able to fix the texture issue by reordering the vertices defined in the faces. If you would like to check out the sketch, you can find it [here](https://editor.p5js.org/kfahn/sketches/nJ_OdFnxA).
 
 <p align="center"><img src="assets/textured-bucky.jpg" alt="Buckyball with sprites" width="800px"></p>
 
 ## Net of the unfolded buckyball
-
-I am not sure how practical this is, but perhaps another possible approach is to try to use the unfolded version of the buckyball to create a uv-mapping.
 
 <p align="center"><img src="assets/unwrapped.png" alt="Unwrapped buckyball" width="800px"></p>
 
@@ -118,6 +94,7 @@ Icosidodecahedron#:~:text=An%20icosidodecahedron%20has%20icosahedral%20symmetry,
 - [Graphs and Matrices](https://www.mathworks.com/help/matlab/math/graphs-and-matrices.html)
 - [Adjacency-matrix-for-soccer-ball-football](https://math.stackexchange.com/questions/4477058/adjacency-matrix-for-soccer-ball-football)
 - [Graph 1389 - Truncated Icosahedral Graph](https://houseofgraphs.org/graphs/1389)
+- [polyhedr.com](https://polyhedr.com/icosidodecahedron2.html)
 - [Truncated_icosahedron](https://en.m.wikipedia.org/wiki/Truncated_icosahedron) -[3d-mapping-a-dodecahedron](https://forum.electromage.com/t/3d-mapping-a-dodecahedron/682/3)
 
 Texture

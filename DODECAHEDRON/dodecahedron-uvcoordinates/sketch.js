@@ -8,7 +8,7 @@ let dodecahedron;
 let spritesheet;
 let textures = [];
 let palette = [];
-let s = 64;
+let s = 128;
 
 let url =
   "https://supercolorpalette.com/?scp=G0-hsl-1FF8FF-2396FB-283CF6-6E2CF2-C131ED-E935C5-E43A78";
@@ -33,8 +33,7 @@ function generatePaletteArray(url) {
 }
 
 function preload() {
-  spritesheet = loadImage("spritesheet1.png");
-  // spritesheet = loadImage("numbers.png");
+  spritesheet = loadImage("images.jpg");
 }
 
 function setup() {

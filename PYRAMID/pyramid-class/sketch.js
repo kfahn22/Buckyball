@@ -44,7 +44,7 @@ function setup() {
   background(0);
   palette = generatePaletteArray(url);
 
-  noStroke(); // Avoid outlines interfering with textures
+  //noStroke(); // Avoid outlines interfering with textures
 
   // Extract sprites from the spritesheet
   for (let y = 0; y < spritesheet.height; y += s) {
