@@ -74,7 +74,7 @@ getUV(face) {
 
 ## Buckyball
 
-We can use the same procedure with the buckyball. I had to trouble-shoot a bit because initially the texture on some of the faces was reversed or warped. I was able to fix the texture issue by reordering the vertices defined in the faces. If you would like to check out the sketch, you can find it [here](https://editor.p5js.org/kfahn/sketches/nJ_OdFnxA).
+We can use the same procedure with the buckyball. I had to trouble-shoot a bit because initially the texture on some of the faces was reversed or warped. I was able to fix the texture issue by reordering the vertices defined in the faces. If you would like to check out the sketch, you can find it [here](https://editor.p5js.org/kfahn/full/nJ_OdFnxA).
 
 <p align="center"><img src="assets/textured-bucky.jpg" alt="Buckyball with sprites" width="800px"></p>
 
