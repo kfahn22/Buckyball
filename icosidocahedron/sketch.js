@@ -1,10 +1,14 @@
-// A Buckyball consists of 60 vertices forming 12 pentagonal and 20 hexagonal faces.
+// 32 faces, 30 vertices, and 60 edges
+// https://en.wikipedia.org/wiki/Icosidodecahedron
 
 // Adapted from the code from a dodecahedron from Coding Train
 // https://editor.p5js.org/codingtrain/sketches/frIcGeI8l
-let bucky;
-let palette = [];
-let s = 64;
+let icos;
+let font;
+
+function preload() {
+  font = loadFont("Cubano.ttf");
+}
 
 let url =
   "https://supercolorpalette.com/?scp=G0-hsl-1FF8FF-2396FB-283CF6-6E2CF2-C131ED-E935C5-E43A78";
@@ -20,7 +24,7 @@ function hexToColor(hex) {
   let r = parseInt(hex.substring(0, 2), 16);
   let g = parseInt(hex.substring(2, 4), 16);
   let b = parseInt(hex.substring(4, 6), 16);
-  return color(r, g, b, 230);
+  return color(r, g, b, 255);
 }
 
 function generatePaletteArray(url) {
@@ -29,29 +33,29 @@ function generatePaletteArray(url) {
 }
 
 function setup() {
-  createCanvas(512, 512, WEBGL);
+  createCanvas(640, 360, WEBGL);
 
   palette = generatePaletteArray(url);
 
-  bucky = new Buckyball(20, palette);
-  bucky.addVertices();
-  bucky.addFaces();
+  icos = new Icosidodecahedron(40, font, palette);
+  icos.addVertices();
+  icos.addFaces();
 }
 
 function draw() {
-  randomSeed(42);
   background(0);
-  //lights();
   ambientLight(color(255));
   translate(0, -20);
+  //orbitControl(); // Allows mouse rotation
 
   rotateY(frameCount * 0.001); // Continuous rotation on the Y axis
   rotateX(-frameCount * 0.001); // Continuous rotation on the X axis
 
   //drawingContext.disable(drawingContext.DEPTH_TEST);
-  bucky.show();
+  //icos.showVert();
+  icos.show();
 }
 
-function mousePressed() {
-  save("soccer.jpg");
-}
+// function mousePressed() {
+//   save("icos.jpg");
+// }
