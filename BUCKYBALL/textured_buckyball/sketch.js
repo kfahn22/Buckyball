@@ -1,9 +1,7 @@
 let buckyball;
-//let img; // Texture image
 let spritesheet;
-s = 64; //for spritesheet1.png
-//s = 128 //for numbers.png
-
+let s = 128;
+//let s = 256; // I tried a higher resolutio image and it buckyball failed to render correctly.  Not sure why.
 let textures = [];
 let palette = [];
 let font;
@@ -37,8 +35,7 @@ function generatePaletteArray(url) {
 }
 
 function preload() {
-  
-  spritesheet = loadImage("spritesheet.png");
+  spritesheet = loadImage("spritesheet.jpg");
   //spritesheet = loadImage("numbers.png");
   font = loadFont("Cubano.ttf");
 }
@@ -65,14 +62,14 @@ function setup() {
 function draw() {
   background(59);
   textureMode(NORMAL); // Enable UV coordinates
- orbitControl(); // Allows mouse rotation
-  // rotateX(frameCount * 0.01); // Slow rotation
-  // rotateY(frameCount * 0.01); // Slow rotation
+  //orbitControl(); // Allows mouse rotation
+  rotateX(frameCount * 0.01); // Slow rotation
+  rotateY(frameCount * 0.01); // Slow rotation
 
   buckyball.show();
   //buckyball.showVert();
 }
 
-// function mousePressed() {
-//   save("bucky.jpg");
-// }
+function mousePressed() {
+  save("bucky.jpg");
+}

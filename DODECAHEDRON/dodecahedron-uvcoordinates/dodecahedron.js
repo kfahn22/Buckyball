@@ -54,17 +54,17 @@ class Dodecahedron {
   addFaces() {
     // Define the faces using the vertex indices
     this.faces.push([0, 16, 2, 10, 8]);
-    this.faces.push([0, 8, 4, 14, 12]);
+    this.faces.push([12, 14, 4, 8, 0]);
     this.faces.push([16, 17, 1, 12, 0]);
     this.faces.push([1, 9, 11, 3, 17]);
-    this.faces.push([1, 12, 14, 5, 9]);
-    this.faces.push([2, 13, 15, 6, 10]);
+    this.faces.push([9, 5, 14, 12, 1]); // 4
+    this.faces.push([10, 6, 15, 13, 2]);
     this.faces.push([13, 3, 17, 16, 2]);
-    this.faces.push([3, 11, 7, 15, 13]);
+    this.faces.push([13, 15, 7, 11, 3]); // 7
     this.faces.push([4, 8, 10, 6, 18]);
     this.faces.push([14, 5, 19, 18, 4]);
-    this.faces.push([5, 19, 7, 11, 9]);
-    this.faces.push([15, 7, 19, 18, 6]);
+    this.faces.push([9, 11, 7, 19, 5]);
+    this.faces.push([6, 18, 19, 7, 15]);
   }
 
   computeBasisVectors(face) {
