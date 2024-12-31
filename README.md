@@ -31,7 +31,7 @@ Let's start with the dodecahedron. It is not as practical to list of the tranlat
  vertex(v.x, v.y, v.z, uv.x, uv.y);
 ```
 
-First, we need to find the basis vectors for each face. Then, with the basis vectors in hand, we can compute the uv's for each face.
+First, we need to find the basis vectors for each face. 
 
 ```JavaScript
 computeBasisVectors(face) {
@@ -46,6 +46,8 @@ computeBasisVectors(face) {
     return [tangent, bitangent];
 }
 ```
+
+Then, with the basis vectors in hand, we can compute the uv's for each face.
 
 ```Javascript
 getUV(face) {
